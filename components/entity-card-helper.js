@@ -1,8 +1,9 @@
 import {takeDataToUpdateInterestInTextarea} from '../scripts/scriptInterest.js'
 import { takeDataToUpdateLessonInTextarea } from '../scripts/scriptLesson.js';
+import { takeDataToUpdateAchievementInTextarea } from '../scripts/scriptAchievement.js';
 
 // Универсальная функция для создания карточек
-export function createCardEntity(controller, entityId, type, name, description,date=null) {
+export function createCardEntity(controller, entityId, type, name, description,date=null,) {
     const entityContainer = document.createElement("div");
     entityContainer.className = "container-white-card";
     entityContainer.id = `${type}-${entityId}`;
@@ -14,6 +15,9 @@ export function createCardEntity(controller, entityId, type, name, description,d
     if (type === "lesson" && date) {
         entityContainer.appendChild(createTextBlock("Дата:", formatDate(date)));
     }
+    if (type === "achievement" && date) {
+    entityContainer.appendChild(createTextBlock("Дата:", formatDate(date)));
+}
 
     // Добавляем описание
     entityContainer.appendChild(createTextBlock("Описание:", description || "-"));
@@ -29,6 +33,9 @@ export function createCardEntity(controller, entityId, type, name, description,d
             takeDataToUpdateLessonInTextarea(controller, entityId, name,date, description);
         } else if (type === "interest") {
             takeDataToUpdateInterestInTextarea(controller, entityId, name, description);
+        }
+        else if (type === "achievement") {
+        takeDataToUpdateAchievementInTextarea(controller, entityId, name, date, description);
         }
         document.getElementById("fields").scrollIntoView({ behavior: "smooth" });
     });
