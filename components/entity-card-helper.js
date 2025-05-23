@@ -1,54 +1,56 @@
 import {takeDataToUpdateInterestInTextarea} from '../scripts/scriptInterest.js'
 import { takeDataToUpdateLessonInTextarea } from '../scripts/scriptLesson.js';
 
-function createCardEntity(controller, entityId, type, name,  description,date = null) {
-    console.log(name)
+// Универсальная функция для создания карточек
+export function createCardEntity(controller, entityId, type, name, date,description) {
     const entityContainer = document.createElement("div");
     entityContainer.className = "container-white-card";
     entityContainer.id = `${type}-${entityId}`;
 
+    // Добавляем название
     entityContainer.appendChild(createTextBlock("Название:", name));
-    entityContainer.appendChild(createTextBlock("Описание:", description));
-     if (type === "lesson") {
-        entityContainer.appendChild(createTextBlock("Дата:", new Date(date).toLocaleDateString()));
+
+    // Для занятий добавляем дату
+    if (type === "lesson" && date) {
+        entityContainer.appendChild(createTextBlock("Дата:", formatDate(date)));
     }
 
+    // Добавляем описание
+    entityContainer.appendChild(createTextBlock("Описание:", description || "-"));
+    
+
+    // Создаем кнопки действий
     const buttonContainer = document.createElement("div");
     buttonContainer.className = "d-flex gap-3 mt-3";
 
     const updateButton = createButton("bi bi-pencil", "Изменить");
     updateButton.addEventListener("click", () => {
-        if (type === "interest") {
+        if (type === "lesson") {
+            takeDataToUpdateLessonInTextarea(controller, entityId, name,date, description);
+        } else if (type === "interest") {
             takeDataToUpdateInterestInTextarea(controller, entityId, name, description);
         }
-        else if (type === "lesson") {
-            takeDataToUpdateLessonInTextarea(controller, entityId, name,  description,date);
-        }
-        document.getElementById("fields").scrollIntoView({
-            behavior: "smooth"
-          });
+        document.getElementById("fields").scrollIntoView({ behavior: "smooth" });
     });
-    
 
     const deleteButton = createButton("bi bi-trash", "Удалить");
     deleteButton.addEventListener("click", () => {
-        if (type === "interest") {
-            controller.deleteInterest(entityId)
-        }
-        else if (type === "lesson") {
+        if (type === "lesson") {
             controller.deleteLesson(entityId);
+        } else if (type === "interest") {
+            controller.deleteInterest(entityId);
         }
     });
-    
+
     buttonContainer.appendChild(updateButton);
     buttonContainer.appendChild(deleteButton);
-
     entityContainer.appendChild(buttonContainer);
 
-    controller.prepend(entityContainer)
+    controller.prepend(entityContainer);
 }
 
-const createTextBlock = (label, text) => {
+// Вспомогательные функции
+function createTextBlock(label, text) {
     const wrapper = document.createElement("div");
 
     const labelDiv = document.createElement("div");
@@ -58,16 +60,14 @@ const createTextBlock = (label, text) => {
     const textDiv = document.createElement("div");
     textDiv.className = "handWrite-dark-font";
     textDiv.style.fontSize = "24px";
-    textDiv.textContent = text;
+    textDiv.textContent = text || "-";
 
     wrapper.appendChild(labelDiv);
     wrapper.appendChild(textDiv);
-
     return wrapper;
-};
+}
 
-
-const createButton = (iconClass, text) => {
+function createButton(iconClass, text) {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "btn";
@@ -84,11 +84,20 @@ const createButton = (iconClass, text) => {
 
     const icon = document.createElement("i");
     icon.className = iconClass;
-
     button.appendChild(icon);
     button.appendChild(document.createTextNode(` ${text}`));
 
     return button;
-};
+}
 
-export {createCardEntity};
+function formatDate(dateString) {
+    if (!dateString) return "-";
+    const date = new Date(dateString);
+    return date.toLocaleDateString('ru-RU', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}

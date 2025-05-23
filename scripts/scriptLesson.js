@@ -1,57 +1,73 @@
 import LessonController from "../components/lessonEntity/controller";
 
-const textareaName = document.getElementById("textareaName");
-const textareaDesc = document.getElementById("textareaDesc");
-const textareaDate = document.getElementById("textareaDate");
+const lessonNameInput = document.getElementById("textareaName");
+const lessonDateInput = document.getElementById("lessonDate");
+const lessonDescInput = document.getElementById("textareaDesc");
 
 let controller = null;
 let lessonId = null;
 
-
 document.addEventListener("DOMContentLoaded", () => {
     controller = new LessonController();
-});
-
-document.addEventListener("DOMContentLoaded", () => {
     
-    const createLessonButton = document.getElementById("createLessonButton");
-    createLessonButton.addEventListener("click", function (e) {
-        const name = textareaName.value.trim();
-        const lessonDate = textareaDate.value.trim();
-        const description = textareaDesc.value.trim();
-        controller.createLesson(name, lessonDate,description);
-        textareaName.value = "";
-        textareaDate.value = "";
-        textareaDesc.value = "";
-
-    });
-});
-
-document.addEventListener("DOMContentLoaded", () => {
+    // Инициализация кнопок
+    document.getElementById("createLessonButton").addEventListener("click", createLesson);
+    document.getElementById("updateLessonButton").addEventListener("click", updateLesson);
     
-    const updateLessonButton = document.getElementById("updateLessonButton");
-    updateLessonButton.addEventListener("click", function (e) {
-        const name = textareaName.value.trim();
-        const lessonDate = textareaData.value.trim();
-        const description = textareaDesc.value.trim();
-        controller.updateLesson(lessonId, name,lessonDate, description);
-        textareaName.value = "";
-        textareaDate.value = "";
-        textareaDesc.value = "";
-
-    });
+    // Скрываем кнопку обновления по умолчанию
+    document.getElementById("updateLessonButton").style.display = "none";
 });
 
-function takeDataToUpdateLessonInTextarea(binController, id, name,lessonDate, desc) {
-    controller = binController;
-    lessonId = id;
+function createLesson() {
+    const name = lessonNameInput.value.trim();
+    const date = lessonDateInput.value;
+    const description = lessonDescInput.value.trim();
+    
+    if (!name || !date) {
+        alert("Пожалуйста, заполните название и дату занятия");
+        return;
+    }
 
-    textareaName.textContent = name;
-    textareaDate.textContent = lessonDate;
-    textareaDesc.textContent = desc;
-
-    const updateLessonButton = document.getElementById("updateLessonButton");
-    updateLessonButton.classList.add('show');
+    controller.createLesson(name, date, description);
+    clearForm();
 }
 
-export {takeDataToUpdateLessonInTextarea}; 
+function updateLesson() {
+    if (!lessonId) {
+        alert("Сначала выберите занятие для редактирования");
+        return;
+    }
+
+    const name = lessonNameInput.value.trim();
+    const date = lessonDateInput.value;
+    const description = lessonDescInput.value.trim();
+    
+    controller.updateLesson(lessonId, name, date, description);
+    clearForm();
+}
+
+export function takeDataToUpdateLessonInTextarea(controller, id, name, date, desc) {
+    lessonId = id;
+    lessonNameInput.value = name;
+    lessonDateInput.value = formatDateForInput(date);
+    lessonDescInput.value = desc || "";
+    
+    // Показываем кнопку обновления
+    document.getElementById("updateLessonButton").style.display = "inline-block";
+    document.getElementById("createLessonButton").style.display = "none";
+}
+
+function clearForm() {
+    currentLessonId = null;
+    lessonNameInput.value = "";
+    lessonDateInput.value = "";
+    lessonDescInput.value = "";
+    document.getElementById("updateLessonButton").style.display = "none";
+    document.getElementById("createLessonButton").style.display = "inline-block";
+}
+
+function formatDateForInput(dateString) {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date.toISOString().slice(0, 16);
+}
