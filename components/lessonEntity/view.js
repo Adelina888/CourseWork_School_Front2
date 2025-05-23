@@ -15,8 +15,8 @@ export default class LessonView {
             this.data.id,
             type,
             this.data.lessonName,
-            this.data.lessonDate,
             this.data.description,
+            this.data.lessonDate
         );
     }
 

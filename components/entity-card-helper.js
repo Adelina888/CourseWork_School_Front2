@@ -2,7 +2,7 @@ import {takeDataToUpdateInterestInTextarea} from '../scripts/scriptInterest.js'
 import { takeDataToUpdateLessonInTextarea } from '../scripts/scriptLesson.js';
 
 // Универсальная функция для создания карточек
-export function createCardEntity(controller, entityId, type, name, date,description) {
+export function createCardEntity(controller, entityId, type, name, description,date=null) {
     const entityContainer = document.createElement("div");
     entityContainer.className = "container-white-card";
     entityContainer.id = `${type}-${entityId}`;
