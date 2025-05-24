@@ -1,3 +1,4 @@
+<!-- HTML -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,14 +25,16 @@
                     <textarea id="textareaName" class="textarea-entities"></textarea>
                 </div>
                 <div class="d-flex flex-row" style="margin: 15px 0px 15px 0px;">
-                    <div>Занятие</div>
-                    <select id="lessonSelect" class="form-control">
-                        <option value="">Загрузка занятий...</option>
-                    </select>
-                </div>
-                <div class="d-flex flex-row" style="margin: 15px 0px 15px 0px;">
                     <div>Описание</div>
                     <textarea id="textareaDesc" class="textarea-entities"></textarea>
+                </div>
+                <div class="d-flex flex-row" style="margin: 15px 0px 15px 0px;">
+                    <div>Занятие</div>
+                    <select id="lessonSelect" class="form-select"></select>
+                </div>
+                <div class="d-flex flex-row" style="margin: 15px 0px 15px 0px;">
+                    <div>Дата достижения</div>
+                    <input type="datetime-local" id="achievementDate" class="form-control">
                 </div>
             </div>
 
@@ -59,4 +62,5 @@
     </footer>
 </body>
 <script type="module" src="./scripts/scriptAchievement.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </html>

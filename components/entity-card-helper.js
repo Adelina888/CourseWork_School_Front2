@@ -3,7 +3,7 @@ import { takeDataToUpdateLessonInTextarea } from '../scripts/scriptLesson.js';
 import { takeDataToUpdateAchievementInTextarea } from '../scripts/scriptAchievement.js';
 
 // Универсальная функция для создания карточек
-export function createCardEntity(controller, entityId, type, name, description,date=null,) {
+export function createCardEntity(controller, entityId, type, name, description,date=null,lessonName = null) {
     const entityContainer = document.createElement("div");
     entityContainer.className = "container-white-card";
     entityContainer.id = `${type}-${entityId}`;
@@ -12,12 +12,12 @@ export function createCardEntity(controller, entityId, type, name, description,d
     entityContainer.appendChild(createTextBlock("Название:", name));
 
     // Для занятий добавляем дату
-    if (type === "lesson" && date) {
+     if ((type === "lesson" || type === "achievement") && date) {
         entityContainer.appendChild(createTextBlock("Дата:", formatDate(date)));
     }
-    if (type === "achievement" && date) {
-    entityContainer.appendChild(createTextBlock("Дата:", formatDate(date)));
-}
+    if (type === "achievement" && lessonName) {
+        entityContainer.appendChild(createTextBlock("Занятие:", lessonName));
+    }
 
     // Добавляем описание
     entityContainer.appendChild(createTextBlock("Описание:", description || "-"));
@@ -35,8 +35,10 @@ export function createCardEntity(controller, entityId, type, name, description,d
             takeDataToUpdateInterestInTextarea(controller, entityId, name, description);
         }
         else if (type === "achievement") {
-        takeDataToUpdateAchievementInTextarea(controller, entityId, name, date, description);
-        }
+        // Получаем lessonId из данных карточки
+        const lessonId = controller.viewModels.find(vm => vm.data.id === entityId)?.data.lessonId;
+        takeDataToUpdateAchievementInTextarea(controller, entityId, name, description, lessonId, date);
+    }
         document.getElementById("fields").scrollIntoView({ behavior: "smooth" });
     });
 
@@ -46,6 +48,9 @@ export function createCardEntity(controller, entityId, type, name, description,d
             controller.deleteLesson(entityId);
         } else if (type === "interest") {
             controller.deleteInterest(entityId);
+        }
+        else if (type === "achievement") {
+            controller.deleteAchievement(entityId);
         }
     });
 
