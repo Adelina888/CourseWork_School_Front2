@@ -1,4 +1,3 @@
-// scripts/scriptAchievement.js
 import AchievementController from "../components/achievementEntity/controller";
 
 const achievementNameInput = document.getElementById("textareaName");
@@ -18,43 +17,42 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function createAchievement() {
-    const lessonId = lessonSelect.value;
-    const name = achievementNameInput.value.trim();
-    const description = achievementDescInput.value.trim();
-    
-    if (!name) {
-        alert("Пожалуйста, заполните название достижения");
-        return;
+    try {
+        const name = achievementNameInput.value.trim();
+        const lessonId = lessonSelect.value;
+        const description = achievementDescInput.value.trim();
+        
+        controller.createAchievement(name, lessonId, description);
+        clearForm();
+    } catch (error) {
+        console.error("Ошибка при создании достижения:", error);
+        alert(error.message || "Ошибка при создании достижения");
     }
-
-    controller.createAchievement( lessonId,name, description);
-    clearForm();
 }
 
 function updateAchievement() {
-    if (!achievementId) {
-        alert("Сначала выберите достижение для редактирования");
-        return;
+    try {
+        if (!achievementId) {
+            throw new Error("Сначала выберите достижение для редактирования");
+        }
+
+        const name = achievementNameInput.value.trim();
+        const lessonId = lessonSelect.value;
+        const description = achievementDescInput.value.trim();
+        
+        controller.updateAchievement(achievementId, name, lessonId, description);
+        clearForm();
+    } catch (error) {
+        console.error("Ошибка при обновлении достижения:", error);
+        alert(error.message || "Ошибка при обновлении достижения");
     }
-    const lessonId = lessonSelect.value;
-    const name = achievementNameInput.value.trim();
-    const description = achievementDescInput.value.trim();
-    
-    controller.updateAchievement(achievementId,lessonId, name,  description);
-    clearForm();
 }
 
-export function takeDataToUpdateAchievementInTextarea(controller, id, name, date, desc, lessonId) {
+export function takeDataToUpdateAchievementInTextarea(controller, id, name,  desc, lessonId) {
     achievementId = id;
-    achievementNameInput.value = name;
+    achievementNameInput.value = name || "";
     lessonSelect.value = lessonId || "";
     achievementDescInput.value = desc || "";
-    
-    // Устанавливаем дату в поле, если оно есть
-    const dateInput = document.getElementById("achievementDate");
-    if (dateInput) {
-        dateInput.value = formatDateForInput(date);
-    }
     
     document.getElementById("updateAchievementButton").style.display = "inline-block";
     document.getElementById("createAchievementButton").style.display = "none";
@@ -62,12 +60,13 @@ export function takeDataToUpdateAchievementInTextarea(controller, id, name, date
 
 function clearForm() {
     achievementId = null;
-    lessonSelect.value = "";
     achievementNameInput.value = "";
+    lessonSelect.value = "";
     achievementDescInput.value = "";
     document.getElementById("updateAchievementButton").style.display = "none";
     document.getElementById("createAchievementButton").style.display = "inline-block";
 }
+
 function formatDateForInput(dateString) {
     if (!dateString) return "";
     const date = new Date(dateString);

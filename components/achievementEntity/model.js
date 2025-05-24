@@ -19,6 +19,7 @@ export default class AchievementModel {
                 this.data = response.data;
                 return response.data;
             }
+            //throw new Error("Не удалось загрузить достижения");
         } catch (error) {
             console.error("Ошибка при загрузке достижений:", error);
             throw error;
@@ -27,17 +28,19 @@ export default class AchievementModel {
 
     async createAchievement(userId, token, data) {
         try {
-            const response = await axios.post(`https://localhost:7235/api/achievements/register`, data, {
+            alert("model")
+            var response = await axios.post(`https://localhost:7235/api/achievements/register`, data, {
                 headers: {
                     "Authorization": `Bearer ${token}`,
                     "Content-Type": "application/json"
                 }
             });
             return response.data;
-        } catch (error) {
-            console.error("Ошибка при создании достижения:", error);
-            throw error;
         }
+        catch (error) {
+            alert("ОШИБКА " + error)
+        }
+        
     }
 
     async update(token, data) {

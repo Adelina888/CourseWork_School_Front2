@@ -17,7 +17,7 @@ export default class AchievementView {
             type,
             this.data.achievementName,
             this.data.description,
-            //this.data.achievementDate
+            this.data.achievementDate
         );
     }
 
@@ -25,16 +25,16 @@ export default class AchievementView {
         try {
             this.data = data;
             this.render(controller);
-            return this.data;
+            return achievement;
         } catch (error) {
             console.error("Ошибка при загрузке достижения:", error);
         }
     }
 
-    async remove() {
+   /* async remove() {
         const element = document.getElementById(`achievement-${this.data.id}`);
         if (element) {
             element.remove();
         }
-    }
+    }*/
 }

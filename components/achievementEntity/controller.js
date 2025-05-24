@@ -13,6 +13,7 @@ export default class AchievementController extends HTMLElement {
 
     connectedCallback() {
         this.usersData = JSON.parse(sessionStorage.getItem("usersData"));
+        console.log(this.usersData);
         this.userId = this.usersData.id; 
         this.token = this.usersData.token;
         this.loadAchievements();
@@ -20,7 +21,8 @@ export default class AchievementController extends HTMLElement {
     }
 
     async loadAchievements() {
-        const achievements = await this.model.getAll(this.userId, this.token);
+        let usersData = JSON.parse(sessionStorage.getItem("usersData"));
+        const achievements = await this.model.getAll(this.userId, usersData.token);
         this.viewModels = [];
         this.innerHTML = "";
 
@@ -32,12 +34,13 @@ export default class AchievementController extends HTMLElement {
     }
 
     async loadLessonsForDropdown() {
-        this.lessons = await this.model.getLessons(this.userId, this.token);
+        let usersData = JSON.parse(sessionStorage.getItem("usersData"));
+        const lessons = await this.model.getLessons(this.userId, usersData.token);
         const select = document.getElementById("lessonSelect");
         
         if (select) {
             select.innerHTML = '<option value="">Не привязано к занятию</option>';
-            this.lessons.forEach(lesson => {
+            lessons.forEach(lesson => {
                 const option = document.createElement("option");
                 option.value = lesson.id;
                 option.textContent = lesson.lessonName;
@@ -47,31 +50,52 @@ export default class AchievementController extends HTMLElement {
     }
 
     async createAchievement(name, lessonId, description) {
-        const data = {
-            WorkerId: this.userId,
-            LessonId: lessonId || null,
-            AchievementName: name,
-            Description: description
-        };
+        
+            let usersData = JSON.parse(sessionStorage.getItem("usersData"));
+            console.log(this.usersData);
+            alert("controller name " + name);
 
-        await this.model.createAchievement(this.userId, this.token, data);
-        await this.loadAchievements();
+
+            const data = {
+                WorkerId: usersData.userId,
+                LessonId: lessonId || null,
+                AchievementName: name,
+                Description: description,
+                AchievementDate: new Date().toISOString()
+            };
+            await this.model.createAchievement(usersData.id, usersData.token, data);
+            await this.loadAchievements();
+            alert("Достижение успешно создано");
+
     }
 
     async updateAchievement(achievementId, name, lessonId, description) {
-        const data = {
-            Id: achievementId,
-            WorkerId: this.userId,
-            LessonId: lessonId || null,
-            AchievementName: name,
-            Description: description
-        };
+        try {
+            let usersData = JSON.parse(sessionStorage.getItem("usersData"));
+            if (!achievementId) {
+                throw new Error("Не выбрано достижение для редактирования");
+            }
 
-        await this.model.update(this.token, data);
-        await this.loadAchievements();
+            const data = {
+                Id: achievementId,
+                WorkerId: usersData.userId,
+                LessonId: lessonId || null,
+                AchievementName: name,
+                Description: description
+            };
+
+            await this.model.update(usersData.token, data);
+            await this.loadAchievements();
+            alert("Достижение успешно обновлено");
+        } catch (error) {
+            console.error("Ошибка при обновлении достижения:", error);
+            alert(error.message || "Не удалось обновить достижение");
+        }
     }
 
     async deleteAchievement(achievementId) {
+        let usersData = JSON.parse(sessionStorage.getItem("usersData"));
+
         if (achievementId <= 0) return;
 
         const index = this.viewModels.findIndex(vm => vm.data.id == achievementId);
@@ -80,7 +104,7 @@ export default class AchievementController extends HTMLElement {
             this.viewModels.splice(index, 1);
         }
         
-        await this.model.delete(this.userId, this.token, achievementId);
+        await this.model.delete(usersData.userId, usersData.token, achievementId);
     }
 }
 
