@@ -76,12 +76,27 @@ function updateAchievement() {
     clearForm();
 }
 
-export function takeDataToUpdateAchievementInTextarea(controller, id, name, desc, lessonId, date) {
+export function takeDataToUpdateAchievementInTextarea(controller, id, name, desc, lessonName, date) {
     achievementId = id;
     achievementNameInput.value = name;
     achievementDescInput.value = desc || "";
-    lessonSelect.value = lessonId || "";
-    achievementDateInput.value = date ? new Date(date).toISOString().slice(0, 16) : "";
+    
+
+    // Находим ID занятия по его названию
+    if (lessonName && lessonName !== "Не указано") {
+        const options = Array.from(lessonSelect.options);
+        const foundOption = options.find(option => option.text === lessonName);
+        if (foundOption) {
+            lessonSelect.value = foundOption.value;
+        } else {
+            lessonSelect.value = "";
+            console.warn(`Занятие "${lessonName}" не найдено в списке`);
+        }
+    } else {
+        lessonSelect.value = "";
+    }
+    //lessonSelect.value = lessonName || "";
+    achievementDateInput.value = formatDateForInput(date);
     
     // Показываем кнопку обновления
     document.getElementById("updateAchievementButton").style.display = "inline-block";
@@ -96,4 +111,17 @@ function clearForm() {
     achievementDateInput.value = "";
     document.getElementById("updateAchievementButton").style.display = "none";
     document.getElementById("createAchievementButton").style.display = "inline-block";
+}
+function formatDateForInput(dateString) {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    
+    // Получаем локальные компоненты даты
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
 }

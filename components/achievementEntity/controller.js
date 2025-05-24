@@ -24,18 +24,30 @@ export default class AchievementController extends HTMLElement {
     }
 
     async loadAchievements() {
-        let usersData = JSON.parse(sessionStorage.getItem("usersData"));
-        const achievements = await this.model.getAll(this.userId, usersData.token);
-        console.log(achievements)
-        this.viewModels = [];
-        this.innerHTML = "";
+    let usersData = JSON.parse(sessionStorage.getItem("usersData"));
+    // Загружаем и достижения, и занятия
+    const [achievements, lessons] = await Promise.all([
+        this.model.getAll(this.userId, usersData.token),
+        this.loadLessons()
+    ]);
+    console.log("Полученные достижения:", achievements);
+    console.log("Полученные занятия:", lessons);
+    
+    this.viewModels = [];
+    this.innerHTML = "";
 
-        achievements.forEach(achievementsData => {
-            const viewModel = new AchievementView(achievementsData, this);
-            viewModel.render(this);
-            this.viewModels.push(viewModel);
-        });
-    }
+    achievements.forEach(achievementsData => {
+        // Находим название занятия по ID
+        const lesson = lessons.find(l => l.id === achievementsData.lessonId);
+        console.log("Найденное занятие:", lesson);
+        achievementsData.lessonName = lesson ? lesson.lessonName : "Не указано";
+        console.log("Итоговое название занятия:", achievementsData.lessonName);
+        
+        const viewModel = new AchievementView(achievementsData, this);
+        viewModel.render(this);
+        this.viewModels.push(viewModel);
+    });
+}
 
     //тут поменять на id worker
     async createAchievement(name, description, lessonId, date) {
@@ -99,6 +111,23 @@ export default class AchievementController extends HTMLElement {
         
         await this.model.delete(usersData.id, usersData.token, achievementId);
     }
+    async loadLessons() {
+    let usersData = JSON.parse(sessionStorage.getItem("usersData"));
+    try {
+        const response = await axios.get(`https://localhost:7235/api/lessons/getallrecords`, {
+            params: { workerId: usersData.id },
+            headers: {
+                "Authorization": `Bearer ${usersData.token}`,
+                "Content-Type": "application/json"
+            }
+        });
+        this.lessons = response.data;
+        return this.lessons;
+    } catch (error) {
+        console.error("Ошибка при загрузке занятий:", error);
+        return [];
+    }
+}
 }
 
 customElements.define("achievements-container", AchievementController);

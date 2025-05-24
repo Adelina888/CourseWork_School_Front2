@@ -3,7 +3,7 @@ import { takeDataToUpdateLessonInTextarea } from '../scripts/scriptLesson.js';
 import { takeDataToUpdateAchievementInTextarea } from '../scripts/scriptAchievement.js';
 
 // Универсальная функция для создания карточек
-export function createCardEntity(controller, entityId, type, name, description,date=null,lessonName = null) {
+export async function createCardEntity(controller, entityId, type, name, description,date=null,lessonName = null) {
     const entityContainer = document.createElement("div");
     entityContainer.className = "container-white-card";
     entityContainer.id = `${type}-${entityId}`;
@@ -36,8 +36,8 @@ export function createCardEntity(controller, entityId, type, name, description,d
         }
         else if (type === "achievement") {
         // Получаем lessonId из данных карточки
-        const lessonId = controller.viewModels.find(vm => vm.data.id === entityId)?.data.lessonId;
-        takeDataToUpdateAchievementInTextarea(controller, entityId, name, description, lessonId, date);
+        /*const lessonId = controller.viewModels.find(vm => vm.data.id === entityId)?.data.lessonId;*/
+        takeDataToUpdateAchievementInTextarea(controller, entityId, name, description, lessonName, date);
     }
         document.getElementById("fields").scrollIntoView({ behavior: "smooth" });
     });

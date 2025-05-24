@@ -18,7 +18,7 @@ export default class AchievementView {
             this.data.achievementName,
             this.data.description,
             this.data.achievementDate,
-            this.data.lessonName || this.data.lesson?.lessonName
+            this.data.lessonName
         );
     }
 
