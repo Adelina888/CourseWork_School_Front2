@@ -77,5 +77,6 @@ export default class AchievementModel {
             alert("ОШИБКА " + error)
         }
     }
-
+    
 }
+

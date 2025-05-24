@@ -65,7 +65,7 @@ export default class AchievementController extends HTMLElement {
         /*const viewModel = new CircleView(data, this);
         viewModel.render(this);
         this.viewModels.push(viewModel);*/
-
+        
         await this.loadAchievements();
         
     }
@@ -128,6 +128,7 @@ export default class AchievementController extends HTMLElement {
         return [];
     }
 }
+
 }
 
 customElements.define("achievements-container", AchievementController);
