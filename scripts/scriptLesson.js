@@ -67,7 +67,7 @@ export function takeDataToUpdateLessonInTextarea(controller, id, name, date, des
 }
 
 function clearForm() {
-    currentLessonId = null;
+    lessonId = null;
     lessonNameInput.value = "";
     lessonDateInput.value = "";
     lessonDescInput.value = "";

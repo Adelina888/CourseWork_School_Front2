@@ -45,7 +45,7 @@ export default class LessonController extends HTMLElement {
             Description: description
         };
 
-        await this.model.createLesson(usersData.id, usersData.token, data);
+        let resp = await this.model.createLesson(usersData.id, usersData.token, data);
         await this.loadLessons();
     }
 
@@ -65,19 +65,28 @@ export default class LessonController extends HTMLElement {
     }
 
     async deleteLesson(lessonId) {
-        let usersData = JSON.parse(sessionStorage.getItem("usersData"));
+    let usersData = JSON.parse(sessionStorage.getItem("usersData"));
 
-        if (lessonId <= 0) return;
+    if (lessonId <= 0) return;
 
+    try {
+        // Сначала удаляем на сервере
+        await this.model.delete(usersData.id, usersData.token, lessonId);
+        
+        // Затем обновляем локальное состояние
         const index = this.viewModels.findIndex(vm => vm.data.id == lessonId);
-
         if (index !== -1) {
-            this.viewModels[index].remove();
+            await this.viewModels[index].remove(); // Вызываем метод remove у view
             this.viewModels.splice(index, 1);
         }
         
-        await this.model.delete(usersData.id, usersData.token, lessonId);
+        // Полная перезагрузка для синхронизации
+        await this.loadLessons();
+    } catch (error) {
+        console.error("Ошибка при удалении:", error);
+        alert("Не удалось удалить занятие");
     }
+}
     async loadInterestsForBinding() {
         let usersData = JSON.parse(sessionStorage.getItem("usersData"));
         const response = await fetch(`https://localhost:7235/api/interests/getallrecords?workerId=${this.userId}`, {

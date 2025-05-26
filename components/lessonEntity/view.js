@@ -31,10 +31,10 @@ export default class LessonView {
         }
     }
 
-    /*async remove() {
-        const lessonElement = document.getElementById(`lesson-${this.data.id}`);
-        if (lessonElement) {
-            lessonElement.remove();
-        }
-    }*/
+   async remove() {
+    const lessonElement = document.getElementById(`lesson-${this.data.id}`);
+    if (lessonElement) {
+        lessonElement.remove();
+    }
+}
 }
