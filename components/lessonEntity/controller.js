@@ -1,9 +1,9 @@
-import LessonModel from "./model.js";
-import LessonView from "./view.js";
+import LessonModel from "./model.js"
+import LessonView from "./view.js"
 
 export default class LessonController extends HTMLElement {
     constructor() {
-        super();
+        super()
         this.model = new LessonModel();
         this.viewModels = [];
         this.usersData = null;
@@ -11,6 +11,7 @@ export default class LessonController extends HTMLElement {
 
     connectedCallback() {
         this.usersData = JSON.parse(sessionStorage.getItem("usersData"));
+        console.log(this.usersData);
         this.userId = this.usersData.id; 
         this.token = this.usersData.token;
         this.loadLessons(this.userId);
@@ -19,6 +20,7 @@ export default class LessonController extends HTMLElement {
     async loadLessons() {
         let usersData = JSON.parse(sessionStorage.getItem("usersData"));
         const lessons = await this.model.getAll(this.userId, usersData.token);
+        console.log(lessons)
         this.viewModels = [];
         this.innerHTML = "";
 
@@ -34,7 +36,7 @@ export default class LessonController extends HTMLElement {
         await this.loadInterestsForBinding();
     }
 
-    async createLesson(name, lessonDate, description) {
+    async createLesson(name, lessonDate,description) {
         let usersData = JSON.parse(sessionStorage.getItem("usersData"));
         const data = {
             WorkerId: usersData.id,
@@ -47,7 +49,7 @@ export default class LessonController extends HTMLElement {
         await this.loadLessons();
     }
 
-    async updateLesson(lessonId, name, lessonDate, description) {
+    async updateLesson(lessonId, name,lessonDate, description) {
         let usersData = JSON.parse(sessionStorage.getItem("usersData"));
 
         const data = {
@@ -76,7 +78,6 @@ export default class LessonController extends HTMLElement {
         
         await this.model.delete(usersData.id, usersData.token, lessonId);
     }
-
     async loadInterestsForBinding() {
         let usersData = JSON.parse(sessionStorage.getItem("usersData"));
         const response = await fetch(`https://localhost:7235/api/interests/getallrecords?workerId=${this.userId}`, {
@@ -89,34 +90,24 @@ export default class LessonController extends HTMLElement {
     }
 
     updateBindLessonSelect() {
-        const bindSelect = document.getElementById("bindLessonSelect");
-        const unbindSelect = document.getElementById("unbindLessonSelect");
-        
-        bindSelect.innerHTML = '<option value="">Выберите урок</option>';
-        unbindSelect.innerHTML = '<option value="">Выберите урок</option>';
-        
+        const select = document.getElementById("bindLessonSelect");
+        select.innerHTML = '<option value="">Выберите урок</option>';
         this.lessons?.forEach(lesson => {
             const option = document.createElement("option");
             option.value = lesson.id;
             option.textContent = lesson.lessonName;
-            bindSelect.appendChild(option.cloneNode(true));
-            unbindSelect.appendChild(option.cloneNode(true));
+            select.appendChild(option);
         });
     }
 
     updateBindInterestSelect() {
-        const bindSelect = document.getElementById("bindInterestSelect");
-        const unbindSelect = document.getElementById("unbindInterestSelect");
-        
-        bindSelect.innerHTML = '<option value="">Выберите интерес</option>';
-        unbindSelect.innerHTML = '<option value="">Выберите интерес</option>';
-        
+        const select = document.getElementById("bindInterestSelect");
+        select.innerHTML = '<option value="">Выберите интерес</option>';
         this.interests?.forEach(interest => {
             const option = document.createElement("option");
             option.value = interest.id;
             option.textContent = interest.interestName;
-            bindSelect.appendChild(option.cloneNode(true));
-            unbindSelect.appendChild(option.cloneNode(true));
+            select.appendChild(option);
         });
     }
 
@@ -149,7 +140,6 @@ export default class LessonController extends HTMLElement {
 
             if (response.ok) {
                 alert("Связь успешно создана");
-                this.loadLessons();
             } else {
                 const error = await response.json();
                 alert(`Ошибка: ${error.message}`);
@@ -157,40 +147,7 @@ export default class LessonController extends HTMLElement {
         } catch (error) {
             console.error("Ошибка при создании связи:", error);
             alert("Произошла ошибка при создании связи");
-        }
-    }
-
-    async unbindLessonWithInterest() {
-        const lessonId = document.getElementById("unbindLessonSelect").value;
-        const interestId = document.getElementById("unbindInterestSelect").value;
-        
-        if (!lessonId || !interestId) {
-            alert("Пожалуйста, выберите урок и интерес");
-            return;
-        }
-
-        let usersData = JSON.parse(sessionStorage.getItem("usersData"));
-        
-        try {
-            const response = await fetch(`https://localhost:7235/api/lessoninterest/${lessonId}/${interestId}`, {
-                method: 'DELETE',
-                headers: {
-                    "Authorization": `Bearer ${usersData.token}`
-                }
-            });
-
-            if (response.ok) {
-                alert("Связь успешно удалена");
-                this.loadLessons();
-            } else {
-                const error = await response.json();
-                alert(`Ошибка: ${error.message}`);
-            }
-        } catch (error) {
-            console.error("Ошибка при удалении связи:", error);
-            alert("Произошла ошибка при удалении связи");
-        }
-    }
+        }}
 }
 
 customElements.define("lessons-container", LessonController);

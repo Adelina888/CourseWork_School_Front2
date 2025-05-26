@@ -1,11 +1,13 @@
-import LessonController from "../components/lessonEntity/controller.js";
+import LessonController from "../components/lessonEntity/controller";
 
 const lessonNameInput = document.getElementById("textareaName");
 const lessonDateInput = document.getElementById("lessonDate");
 const lessonDescInput = document.getElementById("textareaDesc");
 
+const bindLessonSelect = document.getElementById("bindLessonSelect");
+const bindInterestSelect = document.getElementById("bindInterestSelect");
+const bindCategoryInput = document.getElementById("bindCategoryInput");
 const bindButton = document.getElementById("bindButton");
-const unbindButton = document.getElementById("unbindButton");
 
 let controller = null;
 let lessonId = null;
@@ -19,20 +21,11 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // Скрываем кнопку обновления по умолчанию
     document.getElementById("updateLessonButton").style.display = "none";
-    
-    // Инициализация кнопки связывания
     bindButton.addEventListener("click", (e) => {
-        e.preventDefault();
-        controller.bindLessonWithInterest();
-    });
-    
-    // Инициализация кнопки удаления связи
-    unbindButton.addEventListener("click", (e) => {
-        e.preventDefault();
-        controller.unbindLessonWithInterest();
-    });
-    
-    controller.loadInterestsForBinding();
+    e.preventDefault();
+    controller.bindLessonWithInterest();
+});
+controller.loadInterestsForBinding();
 });
 
 function createLesson() {
@@ -74,7 +67,7 @@ export function takeDataToUpdateLessonInTextarea(controller, id, name, date, des
 }
 
 function clearForm() {
-    lessonId = null;
+    currentLessonId = null;
     lessonNameInput.value = "";
     lessonDateInput.value = "";
     lessonDescInput.value = "";
@@ -86,6 +79,7 @@ function formatDateForInput(dateString) {
     if (!dateString) return "";
     const date = new Date(dateString);
     
+    // Получаем локальные компоненты даты
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
