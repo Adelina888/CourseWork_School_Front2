@@ -478,3 +478,23 @@
  
   
   
+
+
+        #bindFields {
+    margin-bottom: 20px;
+}
+
+#bindFields h4 {
+    margin-bottom: 15px;
+    color: #313131;
+}
+
+#bindButton {
+    width: 100%;
+    background-color: #4a6f28;
+    border: none;
+}
+
+#bindButton:hover {
+    background-color: #3a5a1f;
+}

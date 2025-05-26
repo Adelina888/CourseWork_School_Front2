@@ -5,25 +5,25 @@ export default class LessonModel {
         this.data = [];
     }
 
-    async getAll(userId, token) {
-        try {
-            const response = await axios.get(`https://localhost:7235/api/lessons/getallrecords`, {
-                params: { workerId: userId }, 
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json"
-                }
-            });
-            
-            if (response.status === 200) {
-                this.data = response.data;
-                return response.data;
+async getAll(userId, token) {
+    try {
+        const response = await axios.get(`https://localhost:7235/api/lessons/getallrecords`, {
+            params: { workerId: userId, includeInterests: true }, 
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
             }
-        } catch (error) {
-            console.error("Ошибка при загрузке занятий:", error);
-            throw error;
+        });
+        
+        if (response.status === 200) {
+            this.data = response.data;
+            return response.data;
         }
-    } 
+    } catch (error) {
+        console.error("Ошибка при загрузке занятий:", error);
+        throw error;
+    }
+}
 
     async createLesson(userId, token, data) {
         try {

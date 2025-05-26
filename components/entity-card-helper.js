@@ -3,7 +3,7 @@ import { takeDataToUpdateLessonInTextarea } from '../scripts/scriptLesson.js';
 import { takeDataToUpdateAchievementInTextarea } from '../scripts/scriptAchievement.js';
 
 // Универсальная функция для создания карточек
-export async function createCardEntity(controller, entityId, type, name, description,date=null,lessonName = null) {
+export async function createCardEntity(controller, entityId, type, name, description,date=null,lessonName = null,interests = []) {
     const entityContainer = document.createElement("div");
     entityContainer.className = "container-white-card";
     entityContainer.id = `${type}-${entityId}`;
@@ -58,8 +58,23 @@ export async function createCardEntity(controller, entityId, type, name, descrip
     buttonContainer.appendChild(deleteButton);
     entityContainer.appendChild(buttonContainer);
 
+     if (type === "lesson" && interests && interests.length > 0) {
+        const interestsBlock = document.createElement("div");
+        interestsBlock.appendChild(createTextBlock("Связанные интересы:", ""));
+        
+        const interestsList = document.createElement("ul");
+        interests.forEach(interest => {
+            const item = document.createElement("li");
+            item.textContent = `${interest.interestName} (${interest.category})`;
+            interestsList.appendChild(item);
+        });
+        
+        interestsBlock.appendChild(interestsList);
+        entityContainer.appendChild(interestsBlock);
+    }
+
     controller.prepend(entityContainer);
-}
+    }
 
 // Вспомогательные функции
 function createTextBlock(label, text) {
