@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         window.location.href = "login.html";
         return;
     }
-
+    let materialIds = [];
     const workerId = usersData.id;
     const token = usersData.token;
     const lessonSelect = document.getElementById("lessonSelect");
@@ -35,66 +35,46 @@ document.addEventListener("DOMContentLoaded", async () => {
         alert("Не удалось загрузить список занятий");
     }
 
-    // Обработчик генерации отчета
-    generateReportBtn.addEventListener("click", async () => {
-        const selectedLessons = Array.from(lessonSelect.selectedOptions).map(opt => opt.value);
-        if (selectedLessons.length === 0) {
-            alert("Выберите хотя бы одно занятие");
-            return;
-        }
+ generateReportBtn.addEventListener("click", async () => {
+    const selectedOptions = Array.from(lessonSelect.selectedOptions);
+    if (selectedOptions.length === 0) {
+        alert("Выберите хотя бы одно занятие");
+        return;
+    }
 
-        const format = document.querySelector('input[name="reportFormat"]:checked').value;
+    const format = document.querySelector('input[name="reportFormat"]:checked').value;
+    const usersData = JSON.parse(sessionStorage.getItem("usersData"));
+    
+    try {
+        const endpoint = format === "word" 
+            ? "CreateWordDocumentMaterialByLessons" 
+            : "CreateExcelDocumentMaterialByLessons";
         
-       try {
-        let endpoint = format === "word" 
-            ? "CreateWordDocumentMaterialByLessonsAsync" 
-            : "CreateExcelDocumentMaterialByLessonsAsync";
-
-                // Добавляем логирование
-        console.log("Отправляем запрос:", {
-            url: `https://localhost:7235/api/Report/${endpoint}`,
-            workerId: workerId,
-            lessonIds: selectedLessons,
-            token: token
-        });
-
-        // Изменим способ передачи параметров
+        // Правильное формирование URL
+        const baseUrl = `https://localhost:7235/api/report/${endpoint}`;
         const params = new URLSearchParams();
-        params.append('workerId', workerId);
-        selectedLessons.forEach(lessonId => {
-            params.append('lessonIds', lessonId);
-        });
-
-        const response = await axios.get(`https://localhost:7235/api/Report/${endpoint}?${params.toString()}`, {
+        params.append('workerId', usersData.id);
+        selectedOptions.forEach(opt => params.append('lessonIds', opt.value));
+        
+        const response = await axios.get(`${baseUrl}?${params.toString()}`, {
             headers: {
-                "Authorization": `Bearer ${token}`
+                "Authorization": `Bearer ${usersData.token}`,
+                "Accept": "application/octet-stream"
             },
             responseType: "blob"
         });
 
-        console.log("Получен ответ:", response);
-
-            // Создаем ссылку для скачивания
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement("a");
-            link.href = url;
-            
-            const extension = format === "word" ? "docx" : "xlsx";
-            link.setAttribute("download", `materials_by_lessons.${extension}`);
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-            
-        } catch (error) {
-    if (error.response) {
-        console.error("Server responded with:", error.response.status);
-        console.error("Response data:", error.response.data);
-    } else if (error.request) {
-        console.error("No response received:", error.request);
-    } else {
-        console.error("Request error:", error.message);
+        // Создание ссылки для скачивания
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `report.${format === "word" ? "docx" : "xlsx"}`);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        
+    } catch (error) {
+        console.error("Ошибка:", error);
+        alert(`Ошибка при генерации отчета: ${error.message}`);
     }
-    alert(`Ошибка: ${error.message}`);
-}
-    });
-});
+});})
