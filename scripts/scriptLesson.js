@@ -33,21 +33,11 @@ function createLesson() {
     const date = lessonDateInput.value;
     const description = lessonDescInput.value.trim();
     
-    if (!name || !date) {
-        alert("Пожалуйста, заполните название и дату занятия");
-        return;
-    }
-
     controller.createLesson(name, date, description);
     clearForm();
 }
 
 function updateLesson() {
-    if (!lessonId) {
-        alert("Сначала выберите занятие для редактирования");
-        return;
-    }
-
     const name = lessonNameInput.value.trim();
     const date = lessonDateInput.value;
     const description = lessonDescInput.value.trim();

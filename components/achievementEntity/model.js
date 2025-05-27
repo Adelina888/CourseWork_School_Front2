@@ -22,7 +22,8 @@ export default class AchievementModel {
             }
         }
         catch (error) {
-            alert("ОШИБКА " + error)
+            console.error("Ошибка при загрузки всех достижений:", error);
+            throw error;
         }
     } 
 
@@ -42,7 +43,8 @@ export default class AchievementModel {
             }
         }
         catch (error) {
-            alert("ОШИБКА " + error)
+            console.error("Ошибка при создании достижения:", error);
+            throw error;
         }
     }
 
@@ -57,7 +59,8 @@ export default class AchievementModel {
             });
         }
         catch (error) {
-            alert("ОШИБКА " + error)
+            console.error("Ошибка при обновлении достижения:", error);
+            throw error;
         }
     }
 
@@ -74,7 +77,8 @@ export default class AchievementModel {
             });
         }
         catch (error) {
-            alert("ОШИБКА " + error)
+            console.error("Ошибка при удалении достижения:", error);
+            throw error;
         }
     }
     

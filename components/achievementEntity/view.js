@@ -32,7 +32,7 @@ export default class AchievementView {
         }
     }
 
-    async addComment(profileId, profileName, profileAvatar, commentContentText) {
+    /*async addComment(profileId, profileName, profileAvatar, commentContentText) {
         const newComment = {
             profileId,
             postId: this.postId,
@@ -56,6 +56,11 @@ export default class AchievementView {
         if (postElement) {
             postElement.remove();
         }
-    }
+    }*/
+    async remove() {
+    const achievementElement = document.getElementById(`achievement-${this.data.id}`);
+    if (achievementElement) {
+        achievementElement.remove();
+    }}
 
 } 

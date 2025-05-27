@@ -30,7 +30,7 @@ export default class InterestView {
         }
     }
 
-    async addComment(profileId, profileName, profileAvatar, commentContentText) {
+    /*async addComment(profileId, profileName, profileAvatar, commentContentText) {
         const newComment = {
             profileId,
             postId: this.postId,
@@ -54,27 +54,12 @@ export default class InterestView {
         if (postElement) {
             postElement.remove();
         }
+    }*/
+    async remove() {
+    const interestElement = document.getElementById(`interest-${this.data.id}`);
+    if (interestElement) {
+        interestElement.remove();}
     }
 
-    /*attachCommentFormListener() {
-        const form = document.getElementById("enter-comment");
-        const textarea = document.getElementById("comment-textarea");
-
-        if (form && textarea) {
-            form.onsubmit = (e) => {
-                e.preventDefault();
-                const commentText = textarea.value.trim();
-                if (commentText) {
-                    // Для примера передаём тестовые данные пользователя
-                    this.addComment(
-                        "2",
-                        "name 2",
-                        "images/ava2",
-                        commentText
-                    );
-                    textarea.value = "";
-                }
-            };
-        }
-    }*/
+    
 } 

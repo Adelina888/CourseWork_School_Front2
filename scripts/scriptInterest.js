@@ -20,22 +20,12 @@ document.addEventListener("DOMContentLoaded", () => {
 function createInterest() {
     const name = interestNameInput.value.trim();
     const description = interestDescInput.value.trim();
-    
-    if (!name) {
-        alert("Пожалуйста, заполните название интереса");
-        return;
-    }
 
     controller.createInterest(name, description);
     clearForm();
 }
 
 function updateInterest() {
-    if (!currentInterestId) {
-        alert("Сначала выберите интерес для редактирования");
-        return;
-    }
-
     const name = interestNameInput.value.trim();
     const description = interestDescInput.value.trim();
     

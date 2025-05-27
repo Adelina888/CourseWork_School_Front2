@@ -22,7 +22,8 @@ export default class InterestModel {
             }
         }
         catch (error) {
-            alert("ОШИБКА " + error)
+           console.error("Ошибка при загрузки всех интересов:", error);
+            throw error;
         }
     } 
 
@@ -42,7 +43,8 @@ export default class InterestModel {
             }
         }
         catch (error) {
-            alert("ОШИБКА " + error)
+            console.error("Ошибка при добавлении интереса:", error);
+            throw error;
         }
     }
 
@@ -57,7 +59,8 @@ export default class InterestModel {
             });
         }
         catch (error) {
-            alert("ОШИБКА " + error)
+           console.error("Ошибка при обновлении интереса:", error);
+            throw error;
         }
     }
 
@@ -74,57 +77,9 @@ export default class InterestModel {
             });
         }
         catch (error) {
-            alert("ОШИБКА " + error)
+            console.error("Ошибка при удалении интереса:", error);
+            throw error;
         }
     }
 
-    /*async updatePost(postId, url, text) {
-        const post = updateItem(PATH, postId, {
-            "userId": "3",
-            "profileAvatar": "profile/ava4.jpg",
-            "profileName": "name 1",
-            "postContentImage": `${url}`,
-            "postContentText": `${text}`,
-            "like": "false"
-        })
-
-        return post;
-    }
-    
-    async addComment(postId, profileId, profileName, profileAvatar, commentContentText) {
-        const newComment = {
-            postId,
-            profileId,
-            profileName,
-            profileAvatar,
-            commentContentText
-        };
-        
-        const savedComment = await createItem(COMMENT_PATH, newComment);
-
-        const post = this.data.find(p => p.id == postId);
-        if (post) {
-            post.comments.push(savedComment);
-        }
-
-        return savedComment;
-    }
-
-     async delete(item) {
-        const _id = item?.id || item;
-        await deleteItem(PATH, _id);
-
-        // Также удаляем из локального массива
-        this.data = this.data.filter(p => p.id != _id);
-    }
-
-    // Сохраняем посты в localStorage (если надо)
-    saveToLocalStorage() {
-        lsSave(PATH, this.data);
-    }
-
-    // Загружаем посты из localStorage
-    loadFromLocalStorage() {
-        this.data = lsReadArray(PATH);
-    }*/
 }
