@@ -6,7 +6,7 @@ export default class AchievementModel {
     }
 
     async getAll(userId, token) {
-        //alert("MODEL getall model token " + token);
+
         try {
             var response = await axios.get(`https://localhost:7235/api/achievements/getallrecords`, {
                 params: { workerId: userId }, 

@@ -50,23 +50,13 @@ function createAchievement() {
     const name = achievementNameInput.value.trim();
     const description = achievementDescInput.value.trim();
     const lessonId = lessonSelect.value || null;
-    const date = achievementDateInput.value || new Date().toISOString();
-    
-    if (!name) {
-        alert("Пожалуйста, заполните название достижения");
-        return;
-    }
+    const date = achievementDateInput.value || new Date().toISOString();   
 
     controller.createAchievement(name, description, lessonId, date);
     clearForm();
 }
 
 function updateAchievement() {
-    if (!achievementId) {
-        alert("Сначала выберите достижение для редактирования");
-        return;
-    }
-
     const name = achievementNameInput.value.trim();
     const description = achievementDescInput.value.trim();
     const lessonId = lessonSelect.value || null;

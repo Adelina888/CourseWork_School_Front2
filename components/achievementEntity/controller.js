@@ -9,12 +9,6 @@ export default class AchievementController extends HTMLElement {
         this.usersData = null;
     }
 
-    /*connectedCallback() {
-        const usersData = JSON.parse(sessionStorage.getItem("usersData"));
-        alert("connectedCallback " + usersData.fio)
-        this.createHeader(usersData.fio);
-    }*/
-
     connectedCallback() {
         this.usersData = JSON.parse(sessionStorage.getItem("usersData"));
         console.log(this.usersData);
@@ -48,8 +42,6 @@ export default class AchievementController extends HTMLElement {
         this.viewModels.push(viewModel);
     });
 }
-
-    //тут поменять на id worker
     async createAchievement(name, description, lessonId, date) {
         let usersData = JSON.parse(sessionStorage.getItem("usersData"));
         alert("controller name " + name);
@@ -62,25 +54,12 @@ export default class AchievementController extends HTMLElement {
         };
 
         let resp = await this.model.createAchievement(usersData.id, usersData.token, data);
-        /*const viewModel = new CircleView(data, this);
-        viewModel.render(this);
-        this.viewModels.push(viewModel);*/
         
         await this.loadAchievements();
-        
     }
 
     async updateAchievement(achievementId, name, desc,lessonId, date) {
         let usersData = JSON.parse(sessionStorage.getItem("usersData"));
-
-        /*const index = this.viewModels.findIndex(vm => vm.data.id == circleId);
-        alert("index " + index)
-        if (index !== -1) {
-            const viewModel = this.viewModels[index];
-
-            viewModel.data.circleName = name;
-            viewModel.data.description = desc;
-        }*/
 
         const data = {
             Id: achievementId,

@@ -45,7 +45,7 @@ export default class AchievementView {
         try {
             await createItem("comments", newComment);
             this.comments.push(newComment);
-            this.render(); // перерисовываем пост с новым комментарием
+            this.render(); 
         } catch (error) {
             console.error("Ошибка при добавлении комментария:", error);
         }
@@ -58,25 +58,4 @@ export default class AchievementView {
         }
     }
 
-    /*attachCommentFormListener() {
-        const form = document.getElementById("enter-comment");
-        const textarea = document.getElementById("comment-textarea");
-
-        if (form && textarea) {
-            form.onsubmit = (e) => {
-                e.preventDefault();
-                const commentText = textarea.value.trim();
-                if (commentText) {
-                    // Для примера передаём тестовые данные пользователя
-                    this.addComment(
-                        "2",
-                        "name 2",
-                        "images/ava2",
-                        commentText
-                    );
-                    textarea.value = "";
-                }
-            };
-        }
-    }*/
 } 
