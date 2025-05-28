@@ -30,36 +30,10 @@ export default class InterestView {
         }
     }
 
-    /*async addComment(profileId, profileName, profileAvatar, commentContentText) {
-        const newComment = {
-            profileId,
-            postId: this.postId,
-            commentId: Date.now().toString(),
-            profileAvatar,
-            profileName,
-            commentContentText
-        };
-
-        try {
-            await createItem("comments", newComment);
-            this.comments.push(newComment);
-            this.render(); // перерисовываем пост с новым комментарием
-        } catch (error) {
-            console.error("Ошибка при добавлении комментария:", error);
-        }
-    }
-
-    async remove() {
-        const postElement = document.getElementById(`post-${this.data.id}`);
-        if (postElement) {
-            postElement.remove();
-        }
-    }*/
     async remove() {
     const interestElement = document.getElementById(`interest-${this.data.id}`);
     if (interestElement) {
         interestElement.remove();}
     }
-
-    
+  
 } 

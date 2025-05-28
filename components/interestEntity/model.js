@@ -6,7 +6,6 @@ export default class InterestModel {
     }
 
     async getAll(userId, token) {
-        //alert("MODEL getall model token " + token);
         try {
             var response = await axios.get(`https://localhost:7235/api/interests/getallrecords`, {
                 params: { workerId: userId }, 

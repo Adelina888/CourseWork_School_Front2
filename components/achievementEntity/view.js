@@ -32,35 +32,9 @@ export default class AchievementView {
         }
     }
 
-    /*async addComment(profileId, profileName, profileAvatar, commentContentText) {
-        const newComment = {
-            profileId,
-            postId: this.postId,
-            commentId: Date.now().toString(),
-            profileAvatar,
-            profileName,
-            commentContentText
-        };
-
-        try {
-            await createItem("comments", newComment);
-            this.comments.push(newComment);
-            this.render(); 
-        } catch (error) {
-            console.error("Ошибка при добавлении комментария:", error);
-        }
-    }
-
-    async remove() {
-        const postElement = document.getElementById(`post-${this.data.id}`);
-        if (postElement) {
-            postElement.remove();
-        }
-    }*/
     async remove() {
     const achievementElement = document.getElementById(`achievement-${this.data.id}`);
     if (achievementElement) {
         achievementElement.remove();
     }}
-
 } 

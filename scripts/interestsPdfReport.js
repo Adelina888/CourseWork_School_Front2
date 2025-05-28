@@ -58,23 +58,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const blob = new Blob([response.data], { type: 'application/pdf' });
             const url = URL.createObjectURL(blob);
-/*
-        link = document.createElement('a');
-        link.href = url;
-        link.download = 'report.pdf'; // Имя файла при скачивании
-        link.click(); // Автоматически инициирует скачивание
-*/
-// Очищаем контейнер
-//pdfViewerContainer.innerHTML = '';
-//pdfViewerContainer.style.display = 'block';
 
-// Обновляем src у существующего iframe
-//const iframe = document.getElementById("pdfViewer");
- const iframe = document.createElement('iframe');
-iframe.src = url;
-iframe.style.width = '100%';
-iframe.style.height = '600px';
-pdfViewerContainer.appendChild(iframe);
+            const iframe = document.createElement('iframe');
+            iframe.src = url;
+            iframe.style.width = '100%';
+            iframe.style.height = '600px';
+            pdfViewerContainer.appendChild(iframe);
 
             
         } catch (error) {
