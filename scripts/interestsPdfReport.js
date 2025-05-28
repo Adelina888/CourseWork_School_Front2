@@ -19,8 +19,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("toDate").valueAsDate = today;
 
     showReportBtn.addEventListener("click", async () => {
-        const fromDate = document.getElementById("fromDate").value;
-        const toDate = document.getElementById("toDate").value;
+        const fromDate = new Date(document.getElementById("fromDate").value).toISOString();
+        const toDate = new Date(document.getElementById("toDate").value).toISOString();
+
+        
         
         if (!fromDate || !toDate) {
             alert("Выберите период");
@@ -44,7 +46,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     },
                     headers: {
                         "Authorization": `Bearer ${token}`,
-                        "Accept": "application/pdf"
+                        "Accept": "application/octet-stream"
                     },
                     responseType: "blob"
                 }
@@ -55,19 +57,25 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
             const blob = new Blob([response.data], { type: 'application/pdf' });
-const url = URL.createObjectURL(blob);
-
+            const url = URL.createObjectURL(blob);
+/*
+        link = document.createElement('a');
+        link.href = url;
+        link.download = 'report.pdf'; // Имя файла при скачивании
+        link.click(); // Автоматически инициирует скачивание
+*/
 // Очищаем контейнер
-pdfViewerContainer.innerHTML = '';
+//pdfViewerContainer.innerHTML = '';
+//pdfViewerContainer.style.display = 'block';
 
-// Создаем embed элемент (более надежный, чем iframe для PDF)
-const embed = document.createElement('embed');
-embed.src = url;
-embed.type = 'application/pdf';
-embed.style.width = '100%';
-embed.style.height = '600px';
+// Обновляем src у существующего iframe
+//const iframe = document.getElementById("pdfViewer");
+ const iframe = document.createElement('iframe');
+iframe.src = url;
+iframe.style.width = '100%';
+iframe.style.height = '600px';
+pdfViewerContainer.appendChild(iframe);
 
-pdfViewerContainer.appendChild(embed);
             
         } catch (error) {
             console.error("Ошибка:", error);
